@@ -28,7 +28,7 @@ contract CappedCrowdsale is Crowdsale {
   // @return true if crowdsale event has ended
   function hasEnded() public view returns (bool) {
     bool capReached = weiRaised >= cap;
-    return super.hasEnded() || capReached;
+    return capReached;
   }
 
 }

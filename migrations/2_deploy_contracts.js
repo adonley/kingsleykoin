@@ -1,27 +1,28 @@
 // General Libs
-let Math = artifacts.read("./math/Math.sol");
-let SafeMath = artifacts.read("./math/SafeMath.sol");
+let Math = artifacts.require("./math/Math.sol");
+let SafeMath = artifacts.require("./math/SafeMath.sol");
 
 // Ownership
-let Ownable = artifacts.read("./ownership/Ownable.sol");
-let HasNoContracts = artifacts.read("./ownership/HasNoContracts.sol");
-let HasNoEther = artifacts.read("./ownership/HasNoEther.sol");
-let Contactable = artifacts.read("./ownership/Contactable.sol");
+let Ownable = artifacts.require("./ownership/Ownable.sol");
+let HasNoContracts = artifacts.require("./ownership/HasNoContracts.sol");
+let HasNoEther = artifacts.require("./ownership/HasNoEther.sol");
+let Contactable = artifacts.require("./ownership/Contactable.sol");
 
 // Token Imports
-let BasicToken = artifacts.read("./token/BasicToken.sol");
-let StandardToken = artifacts.read("./token/StandardToken.sol");
-let PausableToken = artifacts.read("./token/PausableToken.sol");
+let BasicToken = artifacts.require("./token/BasicToken.sol");
+let StandardToken = artifacts.require("./token/StandardToken.sol");
+let PausableToken = artifacts.require("./token/PausableToken.sol");
+let MintableToken = artifacts.require("./token/MintableToken.sol");
 
 // Lifecycle
-let Pausable = artifacts.read("./lifecycle/Pausable.sol");
+let Pausable = artifacts.require("./lifecycle/Pausable.sol");
 
 // Unikrn Specific
 let KingsleyKoin = artifacts.require("./KingsleyKoin.sol");
 
 // Crowdsale
-let Crowdsale = artifacts.read("./crowdsale/Crowdsale.sol");
-let CappedCrowdsale = artifacts.read("./crowdsale/CappedCrowdsale.sol");
+let Crowdsale = artifacts.require("./crowdsale/Crowdsale.sol");
+let CappedCrowdsale = artifacts.require("./crowdsale/CappedCrowdsale.sol");
 
 module.exports = function(deployer, network, accounts) {
   // TODO: Ownable contracts with owner
@@ -33,7 +34,7 @@ module.exports = function(deployer, network, accounts) {
 
   // Link ownable
   deployer.deploy(Ownable);
-  deployer.link(Ownable, [HasNoContracts, HasNoEther, Contactable]);
+  deployer.link(Ownable, [HasNoContracts, HasNoEther, Contactable, MintableToken]);
 
   // Deploy contracts with no other deps besides ownable
   deployer.deploy(HasNoContracts);
@@ -52,15 +53,18 @@ module.exports = function(deployer, network, accounts) {
   deployer.link(Pausable, PausableToken);
   deployer.deploy(PausableToken);
 
+  deployer.link(StandardToken, MintableToken);
+  deployer.deploy(MintableToken);
+
   deployer.link(HasNoContracts, KingsleyKoin);
   deployer.link(HasNoEther, KingsleyKoin);
   deployer.link(Contactable, KingsleyKoin);
   deployer.link(PausableToken, KingsleyKoin);
+  deployer.link(MintableToken, KingsleyKoin);
   deployer.deploy(KingsleyKoin);
 
-  deployer.link(KingsleyKoin, Crowdsale);
-  deployer.deploy(Crowdsale);
+  deployer.deploy([Crowdsale, 0.004, "0x3C4a4F32615c04Aa178926137745F5b005F37eaA"]);
 
   deployer.link(CappedCrowdsale, Crowdsale);
-  deployer.deploy(CappedCrowdsale);
+  deployer.deploy([CappedCrowdsale, 1000]);
 };
