@@ -3,12 +3,9 @@ pragma solidity ^0.4.2;
 import {SafeMath} from './math/SafeMath.sol';
 import {PausableToken} from './token/PausableToken.sol';
 import {MintableToken} from './token/MintableToken.sol';
-import {Contactable} from './ownership/Contactable.sol';
-import {HasNoContracts} from './ownership/HasNoContracts.sol';
-import {HasNoEther} from './ownership/HasNoEther.sol';
 import {Ownable} from './ownership/Ownable.sol';
 
-contract KingsleyKoin is Ownable, Contactable, HasNoContracts, HasNoEther, PausableToken, MintableToken {
+contract KingsleyKoin is Ownable, PausableToken, MintableToken {
     using SafeMath for uint;
 
     uint256 public totalSupply;

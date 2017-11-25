@@ -13,17 +13,11 @@ import '../math/SafeMath.sol';
 contract Crowdsale {
   using SafeMath for uint256;
 
-  // The token being sold
+  uint256 public constant ETH_WEI = 10**18;
   KingsleyKoin public token;
-
-  // address where funds are collected
-  address public wallet;
-
-  // how many token units a buyer gets per wei
-  uint256 public rate;
-
-  // amount of raised money in wei
+  address public wallet; // address where funds are collected
   uint256 public weiRaised;
+  uint256 public cap;
 
   /**
    * event for token purchase logging
@@ -35,12 +29,12 @@ contract Crowdsale {
   event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
 
 
-  function Crowdsale(uint256 _rate, address _wallet) public {
-    require(_rate > 0);
+  function Crowdsale(uint256 _cap, address _wallet) public {
     require(_wallet != address(0));
+    require(_cap > 0);
 
+    cap = _cap;
     token = createTokenContract();
-    rate = _rate;
     wallet = _wallet;
   }
 
@@ -63,7 +57,7 @@ contract Crowdsale {
     uint256 weiAmount = msg.value;
 
     // calculate token amount to be created
-    uint256 tokens = weiAmount.mul(rate);
+    uint256 tokens = weiAmount.div(ETH_WEI);
 
     // update state
     weiRaised = weiRaised.add(weiAmount);
@@ -83,6 +77,13 @@ contract Crowdsale {
   // @return true if the transaction can buy tokens
   function validPurchase() internal view returns (bool) {
     bool nonZeroPurchase = msg.value != 0;
-    return nonZeroPurchase;
+    bool withinCap = weiRaised.add(msg.value) <= cap;
+    return nonZeroPurchase && withinCap;
+  }
+
+  // @return true if crowdsale event has ended
+  function hasEnded() public view returns (bool) {
+    bool capReached = weiRaised >= cap;
+    return capReached;
   }
 }
