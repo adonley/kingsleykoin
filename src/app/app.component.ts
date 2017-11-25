@@ -7,7 +7,5 @@ import {Web3Service} from "./core/web3.service";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app works!';
-
   constructor() { }
 }

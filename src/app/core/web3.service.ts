@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-declare let Web3: any;
-declare let web3: any;
-const contract = require('truffle-contract');
-const metacoinArtifacts = require('../../../build/contracts/Metacoin.json');
-// const metaincoinArtifacts = require('../../build/contracts/MetaCoin.json');
+import {default as Web3} from 'web3';
+// const contract = require('truffle-contract');
+declare let web3: any; // for metamask
 
 @Injectable()
 export class Web3Service {
@@ -17,11 +15,10 @@ export class Web3Service {
       console.log("Using injected provider");
     } else {
       this.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-      console.log("Using node on machine");
     }
   }
 
-  public getWeb3Instance(): any {
+  public getWeb3(): any {
     return this.web3;
   }
 
