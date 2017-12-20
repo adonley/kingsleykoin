@@ -1,4 +1,5 @@
-FROM node:8.1.4
+FROM node:8.8.1
+
 RUN unlink /bin/sh && ln -s /bin/bash /bin/sh \
     && apt-get update \
     && apt-get install -y curl \
@@ -13,7 +14,7 @@ WORKDIR /ng-app
 
 COPY . .
 
-RUN $(npm bin)/ng build --prod && apt-get install -y python python-pip python python-dev \
-  python-setuptools groff less && pip install --upgrade pip && pip install --upgrade awscli
+RUN apt-get install -y python python-pip python python-dev python-setuptools groff less && \
+  $(npm bin)/ng build --prod && pip install --upgrade pip && pip install --upgrade awscli
 
 ENTRYPOINT ./deploy.sh
