@@ -44,3 +44,6 @@ testem.log
 Thumbs.db
 
 src/assets/contracts
+
+env
+codeship.aes

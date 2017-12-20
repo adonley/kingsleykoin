@@ -1,0 +1,5 @@
+frontend:
+  build:
+    image: kingselykoin
+    dockerfile_path: Dockerfile
+  encrypted_env_file: env.encrypted

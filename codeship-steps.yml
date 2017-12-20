@@ -1,0 +1,6 @@
+- type: serial
+  tag: master
+  steps:
+  - name: Build and push to s3
+    service: frontend
+    command: ./deploy.sh
